@@ -1,0 +1,123 @@
+name: framework-mcp
+
+x-wordpress-env: &wordpress-env
+  DB_NAME: ${DB_NAME:-framework_mcp_dev}
+  DB_USER: ${DB_USER:-wordpress}
+  DB_PASSWORD: ${DB_PASSWORD:-wordpress}
+  DB_HOST: mariadb
+  WP_URL: ${WP_URL:-https://localhost:20300}
+
+services:
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "${NGINX_HTTPS_PORT:-20300}:443"
+    volumes:
+      - wordpress_data:/var/www/html:ro
+      - ./example:/var/www/html/wp-content/plugins/framework-mcp-example:cached
+      - .:/var/www/html/framework-mcp-library:cached
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - php
+    networks:
+      - framework-mcp
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./example:/var/www/html/wp-content/plugins/framework-mcp-example:cached
+      - .:/var/www/html/framework-mcp-library:cached
+      - ./docker/wp-config.php:/var/www/html/wp-config.php:ro
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/zz-php.ini:ro
+      - ./docker/php/conf.d:/usr/local/etc/php/conf.d/local:ro
+    environment:
+      <<: *wordpress-env
+      XDEBUG_MODE: ${XDEBUG_MODE:-off}
+      XDEBUG_CLIENT_HOST: ${XDEBUG_CLIENT_HOST:-host.docker.internal}
+      XDEBUG_CLIENT_PORT: ${XDEBUG_CLIENT_PORT:-9003}
+      XDEBUG_IDEKEY: ${XDEBUG_IDEKEY:-PHPSTORM}
+      WP_ENVIRONMENT_TYPE: ${WP_ENVIRONMENT_TYPE:-local}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - framework-mcp
+
+  mariadb:
+    image: mariadb:latest
+    restart: unless-stopped
+    ports:
+      - "${MARIADB_PORT:-20301}:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MARIADB_DATABASE: ${DB_NAME:-framework_mcp_dev}
+      MARIADB_USER: ${DB_USER:-wordpress}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-wordpress}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - framework-mcp
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: unless-stopped
+    ports:
+      - "${PHPMYADMIN_PORT:-20302}:80"
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: ${DB_USER:-wordpress}
+      PMA_PASSWORD: ${DB_PASSWORD:-wordpress}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - framework-mcp
+
+  wordpress-init:
+    image: wordpress:cli-php8.2
+    user: "0:0"
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./example:/var/www/html/wp-content/plugins/framework-mcp-example:cached
+      - .:/var/www/html/framework-mcp-library:cached
+      - ./docker/wp-config.php:/var/www/html/wp-config.php:ro
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/zz-php.ini:ro
+      - ./docker/scripts/install-wordpress.sh:/usr/local/bin/install-wordpress.sh:ro
+    environment:
+      <<: *wordpress-env
+      WP_TITLE: ${WP_TITLE:-Framework MCP Dev}
+      WP_ADMIN_USER: ${WP_ADMIN_USER:-admin}
+      WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD:-demo}
+      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL:-admin@example.com}
+      MCP_ADAPTER_VERSION: ${MCP_ADAPTER_VERSION:-v0.7.1}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - framework-mcp
+    entrypoint: ["/bin/sh", "/usr/local/bin/install-wordpress.sh"]
+    restart: "no"
+    profiles:
+      - init
+
+volumes:
+  wordpress_data:
+  mariadb_data:
+
+networks:
+  framework-mcp:
+    driver: bridge

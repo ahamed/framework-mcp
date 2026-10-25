@@ -1,0 +1,60 @@
+<?php
+/**
+ * The {{class_name}} MCP tool.
+ */
+namespace {{namespace}};
+
+defined('ABSPATH') || exit;
+
+use Ahamed\FrameworkMcp\JsonSchema\JsonSchema;
+use Ahamed\FrameworkMcp\Request;
+use Ahamed\FrameworkMcp\Response;
+use Ahamed\FrameworkMcp\Tool;
+
+class {{class_name}} extends Tool
+{
+    /**
+     * What the tool does, shown to the model.
+     *
+     * @var string
+     */
+    protected $description = '';
+
+    /**
+     * Declare the tool's arguments.
+     *
+     * @param JsonSchema $schema The schema builder.
+     *
+     * @return array
+     */
+    public function schema(JsonSchema $schema)
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Decide whether the current user may run the tool with these arguments.
+     *
+     * @param Request $request The tool call.
+     *
+     * @return bool|\WP_Error
+     */
+    public function permission(Request $request)
+    {
+        return current_user_can('read');
+    }
+
+    /**
+     * Handle the tool call.
+     *
+     * @param Request $request The tool call.
+     *
+     * @return Response
+     */
+    public function handle(Request $request)
+    {
+        return Response::text('');
+    }
+}

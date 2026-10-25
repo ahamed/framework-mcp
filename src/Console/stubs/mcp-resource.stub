@@ -1,0 +1,47 @@
+<?php
+/**
+ * The {{class_name}} MCP resource.
+ */
+namespace {{namespace}};
+
+defined('ABSPATH') || exit;
+
+use Ahamed\FrameworkMcp\Request;
+use Ahamed\FrameworkMcp\Resource;
+use Ahamed\FrameworkMcp\Response;
+
+class {{class_name}} extends Resource
+{
+    /**
+     * What the resource contains, shown to the model.
+     *
+     * @var string
+     */
+    protected $description = '';
+
+    /**
+     * The URI clients read the resource by.
+     *
+     * @var string
+     */
+    protected $uri = 'plugin://{{class_name}}';
+
+    /**
+     * The MIME type of the resource's content.
+     *
+     * @var string
+     */
+    protected $mime_type = 'text/plain';
+
+    /**
+     * Read the resource.
+     *
+     * @param Request $request The read, which carries no arguments.
+     *
+     * @return Response
+     */
+    public function handle(Request $request)
+    {
+        return Response::text('');
+    }
+}

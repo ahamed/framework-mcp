@@ -1,0 +1,48 @@
+<?php
+/**
+ * The {{class_name}} MCP prompt.
+ */
+namespace {{namespace}};
+
+defined('ABSPATH') || exit;
+
+use Ahamed\FrameworkMcp\Argument;
+use Ahamed\FrameworkMcp\Prompt;
+use Ahamed\FrameworkMcp\Request;
+use Ahamed\FrameworkMcp\Response;
+
+class {{class_name}} extends Prompt
+{
+    /**
+     * What the prompt is for, shown to the client.
+     *
+     * @var string
+     */
+    protected $description = '';
+
+    /**
+     * Declare the arguments the prompt accepts.
+     *
+     * @return Argument[]
+     */
+    public function arguments()
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Build the prompt messages.
+     *
+     * @param Request $request The prompt fetch.
+     *
+     * @return Response[]
+     */
+    public function handle(Request $request)
+    {
+        return [
+            Response::text(''),
+        ];
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "name": "ahamed/framework-mcp-example",
+    "description": "Playground plugin that exercises ahamed/framework-mcp in a real WordPress runtime.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/var/www/html/framework-mcp-library",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/themeum/framework.git",
+            "no-api": true
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "ahamed/framework-mcp": "*",
+        "themeum/framework": "^3.2.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Example\\App\\": "app/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

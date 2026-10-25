@@ -1,0 +1,61 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Prefix the namespaces inside scoped make:mcp-* stub templates.
+ *
+ * php-scoper copies the .stub files without rewriting them, so a scoped plugin
+ * would generate classes that extend the unprefixed Ahamed\FrameworkMcp\Tool
+ * and import the unprefixed Framework\ classes. Run this after scoping.
+ *
+ * Usage: framework-mcp-prefix-stubs <scoped-stubs-dir> <prefix>
+ */
+
+$stubs_dir = $argv[1] ?? null;
+$prefix = isset($argv[2]) ? trim($argv[2], '\\') : null;
+
+if ($stubs_dir === null || $stubs_dir === '' || $prefix === null || $prefix === '') {
+    fwrite(STDERR, "Usage: framework-mcp-prefix-stubs <scoped-stubs-dir> <prefix>\n");
+    exit(1);
+}
+
+if (!is_dir($stubs_dir)) {
+    fwrite(STDERR, "Stubs directory not found: {$stubs_dir}\n");
+    exit(1);
+}
+
+$pattern = '/(?<![\w\\\\])\\\\?(Ahamed\\\\FrameworkMcp|Framework)\\\\/';
+
+$iterator = new RecursiveIteratorIterator(
+    new RecursiveDirectoryIterator($stubs_dir, FilesystemIterator::SKIP_DOTS)
+);
+
+$changed = 0;
+
+foreach ($iterator as $file) {
+    if (!$file->isFile() || $file->getExtension() !== 'stub') {
+        continue;
+    }
+
+    $path = $file->getPathname();
+    $contents = file_get_contents($path);
+
+    if ($contents === false) {
+        continue;
+    }
+
+    $updated = preg_replace_callback($pattern, function ($matches) use ($prefix) {
+        $leading = $matches[0][0] === '\\' ? '\\' : '';
+
+        return $leading . $prefix . '\\' . $matches[1] . '\\';
+    }, $contents);
+
+    if (!is_string($updated) || $updated === $contents) {
+        continue;
+    }
+
+    file_put_contents($path, $updated);
+    $changed++;
+}
+
+fwrite(STDOUT, "Prefixed {$changed} stub file(s) with {$prefix}.\n");

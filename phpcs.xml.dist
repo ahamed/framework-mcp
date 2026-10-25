@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ruleset name="FrameworkMcp">
+    <description>PSR-12 and the Framework custom coding standards for src/</description>
+
+    <config name="installed_paths" value="phpcs"/>
+    <arg name="basepath" value="."/>
+    <arg value="ps"/>
+    <arg name="colors"/>
+
+    <config name="testVersion" value="7.4-"/>
+
+    <file>src</file>
+
+    <exclude-pattern>src/Console/stubs/</exclude-pattern>
+
+    <rule ref="PSR12">
+        <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
+        <exclude name="PSR1.Methods.CamelCapsMethodName"/>
+        <exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
+        <exclude name="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine"/>
+    </rule>
+    <rule ref="Framework"/>
+</ruleset>

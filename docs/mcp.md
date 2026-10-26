@@ -60,7 +60,7 @@ class CurrentWeatherTool extends Tool
 
     protected $read_only = true;
 
-    public function schema(JsonSchema $schema)
+    public function input_schema(JsonSchema $schema)
     {
         return [
             'location' => $schema->string()->description('City name')->required(),
@@ -190,10 +190,10 @@ A tool extends `Tool` and defines `handle()`.
 
 ### Input schema
 
-`schema()` returns a map of argument names to fragments built with the `JsonSchema` builder. The framework wraps the map into an object schema, and WordPress validates every call against it before `handle()` runs.
+`input_schema()` returns a map of argument names to fragments built with the `JsonSchema` builder. The framework wraps the map into an object schema, and WordPress validates every call against it before `handle()` runs.
 
 ```php
-public function schema(JsonSchema $schema)
+public function input_schema(JsonSchema $schema)
 {
     return [
         'location' => $schema->string()->description('City name')->min(2)->required(),

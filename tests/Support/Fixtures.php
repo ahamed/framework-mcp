@@ -34,7 +34,7 @@ class CurrentWeatherTool extends Tool
 
     protected $idempotent = true;
 
-    public function schema(JsonSchema $schema)
+    public function input_schema(JsonSchema $schema)
     {
         return [
             'location' => $schema->string()->description('City')->required(),

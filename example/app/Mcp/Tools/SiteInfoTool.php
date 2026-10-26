@@ -42,7 +42,7 @@ class SiteInfoTool extends Tool
      *
      * @return array
      */
-    public function schema(JsonSchema $schema)
+    public function input_schema(JsonSchema $schema)
     {
         return [
             'include_counts' => $schema->boolean()

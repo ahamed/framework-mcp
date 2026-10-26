@@ -1,6 +1,6 @@
 <?php
 /**
- * An object fragment, and the serializer for the property maps tools return from schema().
+ * An object fragment, and the serializer for the property maps tools return from input_schema().
  * It is the one place that turns each property's own requiredness into the object's required
  * list, so a nested object and a top-level map follow the same rule.
  *

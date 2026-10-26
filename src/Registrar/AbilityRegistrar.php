@@ -164,7 +164,7 @@ class AbilityRegistrar
         ];
 
         if ($component instanceof Tool) {
-            $arguments['input_schema'] = JsonSchema::object_from_map($component->schema(new JsonSchema()));
+            $arguments['input_schema'] = JsonSchema::object_from_map($component->input_schema(new JsonSchema()));
 
             $output = $component->output_schema(new JsonSchema());
 

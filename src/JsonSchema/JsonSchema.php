@@ -1,6 +1,6 @@
 <?php
 /**
- * Fluent factory handed to a tool's schema() and output_schema().
+ * Fluent factory handed to a tool's input_schema() and output_schema().
  * Mirrors Laravel's JsonSchema builder: the methods return fragments, and a tool returns a map
  * of argument names to fragments that is serialized as the properties of one object schema.
  *

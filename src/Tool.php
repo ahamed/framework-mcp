@@ -62,7 +62,7 @@ abstract class Tool extends Ability
     protected $open_world;
 
     /**
-     * Declare the tool's arguments as a map of names to schema fragments.
+     * Declare the tool's input arguments as a map of names to schema fragments.
      *
      * @param JsonSchema $schema The schema builder.
      *
@@ -70,7 +70,7 @@ abstract class Tool extends Ability
      *
      * @since 1.0.0
      */
-    public function schema(JsonSchema $schema)
+    public function input_schema(JsonSchema $schema)
     {
         return [];
     }

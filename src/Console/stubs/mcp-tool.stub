@@ -27,7 +27,7 @@ class {{class_name}} extends Tool
      *
      * @return array
      */
-    public function schema(JsonSchema $schema)
+    public function input_schema(JsonSchema $schema)
     {
         return [
             //

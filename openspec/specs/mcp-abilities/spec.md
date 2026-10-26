@@ -164,7 +164,7 @@ rules and return the validated subset.
 
 ### Requirement: Input schema
 
-A tool's `schema()` SHALL receive the JSON Schema builder and return a map of argument names
+A tool's `input_schema()` SHALL receive the JSON Schema builder and return a map of argument names
 to schema types; the framework SHALL register it as an object input schema with those
 properties and with every property marked required listed as required. A tool that returns
 an empty map SHALL get an empty object input schema. Arguments SHALL be validated against
